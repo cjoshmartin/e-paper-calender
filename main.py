@@ -26,6 +26,19 @@ EPD_WIDTH = 640
 EPD_HEIGHT = 384
 
 
+# All fonts used in frames
+font_cal = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 16)
+font_day = ImageFont.truetype('fonts/Roboto-Black.ttf', 110)
+font_weather = ImageFont.truetype('fonts/Roboto-Black.ttf', 20)
+font_day_str = ImageFont.truetype('fonts/Roboto-Light.ttf', 35)
+font_month_str = ImageFont.truetype('fonts/Roboto-Light.ttf', 25)
+font_weather_icons = ImageFont.truetype('fonts/meteocons-webfont.ttf', 45)
+font_tasks_list_title = ImageFont.truetype('fonts/Roboto-Light.ttf', 30)
+font_tasks_list = ImageFont.truetype('fonts/tahoma.ttf', 12)
+font_tasks_due_date = ImageFont.truetype('fonts/tahoma.ttf', 11)
+font_tasks_priority = ImageFont.truetype('fonts/tahoma.ttf', 9)
+font_update_moment = ImageFont.truetype('fonts/tahoma.ttf', 9)
+icons_list = {u'01d':u'B',u'01n':u'C',u'02d':u'H',u'02n':u'I',u'03d':u'N',u'03n':u'N',u'04d':u'Y',u'04n':u'Y',u'09d':u'R',u'09n':u'R',u'10d':u'R',u'10n':u'R',u'11d':u'P',u'11n':u'P',u'13d':u'W',u'13n':u'W',u'50d':u'M',u'50n':u'W'}
 
 def main():
         global Debug_Mode;Debug_Mode = 0
@@ -41,19 +54,6 @@ def main():
         global weather_reponse
         global forecast_reponse
 
-        # All fonts used in frames
-        global font_cal; font_cal = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 16)
-        global font_day; font_day = ImageFont.truetype('fonts/Roboto-Black.ttf', 110)
-        global font_weather; font_weather = ImageFont.truetype('fonts/Roboto-Black.ttf', 20)
-        global font_day_str; font_day_str = ImageFont.truetype('fonts/Roboto-Light.ttf', 35)
-        global font_month_str; font_month_str = ImageFont.truetype('fonts/Roboto-Light.ttf', 25)
-        global font_weather_icons; font_weather_icons = ImageFont.truetype('fonts/meteocons-webfont.ttf', 45)
-        global font_tasks_list_title; font_tasks_list_title = ImageFont.truetype('fonts/Roboto-Light.ttf', 30)
-        global font_tasks_list; font_tasks_list = ImageFont.truetype('fonts/tahoma.ttf', 12)
-        global font_tasks_due_date; font_tasks_due_date = ImageFont.truetype('fonts/tahoma.ttf', 11)
-        global font_tasks_priority; font_tasks_priority = ImageFont.truetype('fonts/tahoma.ttf', 9)
-        global font_update_moment; font_update_moment = ImageFont.truetype('fonts/tahoma.ttf', 9)
-        global icons_list; icons_list = {u'01d':u'B',u'01n':u'C',u'02d':u'H',u'02n':u'I',u'03d':u'N',u'03n':u'N',u'04d':u'Y',u'04n':u'Y',u'09d':u'R',u'09n':u'R',u'10d':u'R',u'10n':u'R',u'11d':u'P',u'11n':u'P',u'13d':u'W',u'13n':u'W',u'50d':u'M',u'50n':u'W'}
 
         calendar.setfirstweekday(0) # Monday is the first day of the week
 
@@ -79,7 +79,6 @@ def query_todo_list():
     print('-= Ping ToDo API =-')
     try:
         new_todo_response = requests.get("https://beta.todoist.com/API/v8/tasks", params={"token":TODOIST_TOKEN}).json()
-        break
     except ValueError:
         print('-= ToDo API JSON Failed - Will Try Again =-')
         time.sleep(todo_wait)
