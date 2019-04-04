@@ -161,7 +161,7 @@ def refresh_Screen():
     current_temp = kelvin_2_fah(weather_response['main']['temp'])
     forecast_weather = forecast_response['list'][0]['weather'][0]['main']
     forecast_icon = forecast_response['list'][0]['weather'][0]['icon']
-    forecast_temp_min_max = kelvin_2_fah(forecast_response['list'][0]['main']['temp_min']) + ' \ ' + kelvin_2_fah(forecast_response['list'][0]['main']['temp_max'])
+    forecast_temp_min_max = kelvin_2_fah(forecast_response['list'][0]['main']['temp_min']) + ' , ' + kelvin_2_fah(forecast_response['list'][0]['main']['temp_max'])
 
     if (len(current_weather) >= 9):
         current_weather = current_weather[0:7] + '.'
@@ -223,15 +223,15 @@ def refresh_Screen():
         temp_draw.text((250,line_start + 2 + line_location), priority, font = font_tasks_priority, fill = 255) # Print task priority string
         temp_draw.line((250,line_start + 18 + line_location, 640, line_start + 18 + line_location), fill = 0) # Draw the line below the task
         if 'due' in my_task:
-            temp_draw.rectangle((595,line_start + 2 + line_location, 640, line_start + 18 + line_location), fill = 0) # Draw rectangle for the due date
-            temp_draw.text((602.5, line_start + 3.5 + line_location),str(my_task['due']['string']), font = font_tasks_due_date, fill = 255) # Print the due date of task
+            temp_draw.rectangle((525,line_start + 2 + line_location, 640, line_start + 18 + line_location), fill = 0) # Draw rectangle for the due date
+            temp_draw.text((530.5, line_start + 3.5 + line_location),str(my_task['due']['string']), font = font_tasks_due_date, fill = 255) # Print the due date of task
 
         if (due_date < current_date and due_date > 0):
             draw_red = temp_draw
         else:
             draw_black = temp_draw
         line_location += 26
-        if (line_start + line_location + 28 >= 320):
+        if (line_start + line_location + 28 >= 320 and (len(todo_response) - 9) > 0):
             draw_red.rectangle((550,line_start + 2 + line_location, 640, line_start + 18 + line_location), fill = 0) # Print larger rectangle for more tasks
             # The placement for extra tasks not shown
             notshown_tasks = '... & ' + str(len(todo_response) - 9) +  ' more ...'
