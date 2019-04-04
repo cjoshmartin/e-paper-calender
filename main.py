@@ -12,15 +12,23 @@ import wand
 from wand.display import display
 import datetime
 import os
+from dotenv import load_dotenv
+
+env_path = os.path.dirname(os.path.abspath(__file__)) + '/.env'
+print "Loading env: " + env_path 
+load_dotenv(dotenv_path=env_path, verbose=True)
 
 TODOIST_TOKEN = os.getenv('TODOIST_TOKEN')
 WEATHER_API = os.getenv('WEATHER_API')
 
+print TODOIST_TOKEN + "\n" + WEATHER_API
 EPD_WIDTH = 640
 EPD_HEIGHT = 384
 
+
+
 def main():
-        global Debug_Mode; Debug_Mode = 0
+        global Debug_Mode;Debug_Mode = 0
         global do_screen_update; do_screen_update = 1
         global epd; epd = epd7in5b.EPD()
         if Debug_Mode == 0:
@@ -69,16 +77,18 @@ def query_todo_list():
     global todo_response
     global do_screen_update
     print('-= Ping ToDo API =-')
-    while True:
-        try:
-            new_todo_response = requests.get("https://beta.todoist.com/API/v8/tasks", params={"token":TODOIST_TOKEN}).json()
-            break
-        except ValueError:
-            print('-= ToDo API JSON Failed - Will Try Again =-')
-            time.sleep(todo_wait)
-        except:
-            print('-= ToDo API Too Many Pings - Will Try Again =-')
-            time.sleep(refresh_time)
+    try:
+        new_todo_response = requests.get("https://beta.todoist.com/API/v8/tasks", params={"token":TODOIST_TOKEN}).json()
+        break
+    except ValueError:
+        print('-= ToDo API JSON Failed - Will Try Again =-')
+        time.sleep(todo_wait)
+        return False
+    except:
+        print('-= ToDo API Too Many Pings - Will Try Again =-')
+        time.sleep(refresh_time)
+        return False
+
     if ((new_todo_response) != (todo_response)):
         print('-= Task List Change Detected =-')
         do_screen_update = 1
@@ -100,7 +110,6 @@ def query_weather():
 
 def refresh_Screen():
     global todo_response
-    global Debug_Mode
     global weather_response
 
     # Create clean black frames with any existing Bitmaps
