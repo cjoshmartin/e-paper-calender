@@ -248,8 +248,8 @@ def refresh_Screen():
         wand.display.display(wand.image.Image(filename = "Red_Frame.png"))
         print('-= ...Done =-')
     else:
-        print('-= Updating ePaper... =-')
+        print(update_moment + ': -= Updating ePaper... =-')
         epd.display_frame(epd.get_frame_buffer(image_black),epd.get_frame_buffer(image_red))
-        print('-= ...Done =-')
+        print(update_moment + ': -= ...Done =-')
 if __name__ == '__main__':
     main()
