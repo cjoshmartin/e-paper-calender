@@ -1,0 +1,15 @@
+[Unit]
+Description=Shows data about life on an e-ink display
+StartLimitIntervalSec=0
+Wants = network-online.target
+ After = network.target network-online.target<Paste>
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=pi
+ExecStart=/usr/bin/env python ~/Downloads/ePaper/main.py
+
+[Install]
+WantedBy=multi-user.target

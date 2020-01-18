@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # The Signal Path - DataPad ePaper Display
 # Shahriar Shahramian / November 2018
 
@@ -11,7 +13,7 @@ import json
 import wand
 from wand.display import display
 import datetime
-import os
+import os, sys
 from dotenv import load_dotenv
 
 env_path = os.path.dirname(os.path.abspath(__file__)) + '/.env'
@@ -57,21 +59,25 @@ def main():
 
         calendar.setfirstweekday(0) # Monday is the first day of the week
 
-        global todo_wait; todo_wait = 300
-        global refresh_time; refresh_time = 30
+        global todo_wait; todo_wait = 600
+        global refresh_time; refresh_time = 600
         start_time = time.time() + refresh_time
 
         while True:
-            query_todo_list()
-            if (do_screen_update == 1):
-                do_screen_update = 0
-                refresh_Screen()
-                start_time = time.time() + refresh_time
-            elif (time.time() - start_time) > 0:
-                print('-= General Refresh =-')
-                refresh_Screen()
-                start_time = time.time() + refresh_time
-            time.sleep(todo_wait)
+            try:
+                query_todo_list()
+                if (do_screen_update == 1):
+                    do_screen_update = 0
+                    refresh_Screen()
+                    start_time = time.time() + refresh_time
+                elif (time.time() - start_time) > 0:
+                    print('-= General Refresh =-')
+                    refresh_Screen()
+                    start_time = time.time() + refresh_time
+                time.sleep(todo_wait)
+            except:
+                pass
+
 
 def query_todo_list():
     global todo_response
@@ -253,3 +259,5 @@ def refresh_Screen():
         print(update_moment + ': -= ...Done =-')
 if __name__ == '__main__':
     main()
+
+sys.exit(0)
