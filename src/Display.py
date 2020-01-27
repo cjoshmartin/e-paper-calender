@@ -10,6 +10,8 @@ class Display:
         self.image_red = Image.open('BK_Red.bmp')
         self.draw_red = ImageDraw.Draw(self.image_red)
         self.fonts = Fonts()
+
+        self.setup()
     
     def setup(self):
         self.draw_black.rectangle((0,0,240, 384), fill = 0) # Calender area rectangle

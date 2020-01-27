@@ -1,5 +1,10 @@
 .env
+/**/.env
 __pycache__/**/
 /**/__pycache__/
 
 .vscode/.ropeproject/
+/**/credentials.json
+/**/token.pickle
+/**/*.png
+
