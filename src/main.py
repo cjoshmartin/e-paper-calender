@@ -27,21 +27,18 @@ class EPD:
         self.do_screen_update = 1
         self.todo_response = ''
         self.line_start = 48
-        self.weather_reponse = None
-        self.forecast_reponse = None
-        self.refresh_time = 10
+        self.refresh_time = 60
         self.todos = Todos_List(self.display)
         self.calender = Calender(self.display)
 
     def run(self):
         while True:
             self.refresh()
-            logging.info('EPD   :Sleeping for {}s...'.format(self.refresh_time))
+            logging.info('EPD   : Sleeping for {}s...'.format(self.refresh_time))
             time.sleep(self.refresh_time)
 
     def refresh(self):
         self.display.reset_screen()
-        # update_moment = time.strftime("%I") + ':' + time.strftime("%M") + ' ' + time.strftime("%p")
         # TODO: Refresh Calender
         self.calender.refresh()
         # Check weather and poppulate the weather variables

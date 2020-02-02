@@ -13,6 +13,7 @@ def Display_Factory(width: int, height: int):
 
     elif build_device == 'simulator':
         from Mock_Display import Mock_Display
+        logging.getLogger().setLevel(logging.INFO)
         _instance = Mock_Display(width, height)
     else:
         raise Exception("`{}` is not a vaild build device type ".format(build_device))

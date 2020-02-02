@@ -41,7 +41,7 @@ class Todos_List():
             print('-= Ping ToDo API =-')
             new_todo_response = get_tasks()
             if ((new_todo_response) != (self.todo_response)):
-                logging.info('-= Task List Change Detected =-')
+                logging.info('Todo List     : Task List Change Detected ')
                 self.todo_response = new_todo_response
 
             logging.info('Todo List  :`get_todo` thread is going to sleep for {}s💤'.format(seconds_to_sleep))
