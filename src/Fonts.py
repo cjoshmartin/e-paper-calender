@@ -3,7 +3,7 @@ from PIL import ImageFont
 # All fonts used in frames
 class Fonts:
     def __init__(self):
-        self.cal = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 16)
+        self.cal = ImageFont.truetype('fonts/FreeMonoBold.ttf', 16)
         self.day = ImageFont.truetype('fonts/Roboto-Black.ttf', 110)
         self.weather = ImageFont.truetype('fonts/Roboto-Black.ttf', 20)
         self.day_str = ImageFont.truetype('fonts/Roboto-Light.ttf', 35)
