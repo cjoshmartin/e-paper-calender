@@ -24,9 +24,6 @@ EPD_HEIGHT = 384
 class EPD: 
     def __init__(self):
         self.display = Display_Factory(EPD_WIDTH, EPD_HEIGHT)
-        self.do_screen_update = 1
-        self.todo_response = ''
-        self.line_start = 48
         self.refresh_time = 60
         self.todos = Todos_List(self.display)
         self.calender = Calender(self.display)
@@ -48,7 +45,7 @@ class EPD:
         # TODO: Refresh todos
         self.todos.refresh()
 
-        self.display.show()
+        self.display.refresh()
 
 if __name__ == '__main__':
     edp = EPD()
