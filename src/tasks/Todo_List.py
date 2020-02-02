@@ -47,7 +47,7 @@ class Todos_List():
             logging.info('Todo List  :`get_todo` thread is going to sleep for {}s💤'.format(seconds_to_sleep))
             time.sleep(seconds_to_sleep)
 
-    def __should_shorten(self, text: str) -> bool:
+    def __should_shorten(self, text) -> bool:
         return len(text) > self.__text_max_length
 
     def __get_todo_text(self, task: dict) -> str:
@@ -69,14 +69,14 @@ class Todos_List():
 
         return todo['due'] < self.___get_current_date() and  todo['due'] > 0
 
-    def __write_task_str(self, image: ImageDraw, item: str) -> None:
+    def __write_task_str(self, image, item) -> None:
         task_postion = (
             256,
             self.__starting_vertical_position_of_tasks + self.__line_location
              )
         image.text(task_postion, item, font=self.__fonts.tasks_list, fill=0)  # Print task strings
 
-    def __write_priority_circle(self, image: ImageDraw, priority: str) -> None:
+    def __write_priority_circle(self, image, priority) -> None:
         cirle_background_postion = (
             247.5,
             self.__starting_vertical_position_of_tasks + 2 + self.__line_location,
@@ -91,7 +91,7 @@ class Todos_List():
         image.text(circle_forground_postion, priority,
                         font=self.__fonts.tasks_priority, fill=255)  # Print task priority string
 
-    def __write_task_separating_line(self, image: ImageDraw) -> None:
+    def __write_task_separating_line(self, image) -> None:
         line_postion = (
             250,
             self.__starting_vertical_position_of_tasks + 18 + self.__line_location,
@@ -100,7 +100,7 @@ class Todos_List():
             )
         image.line(line_postion, fill=0)  # Draw the line below the task
 
-    def __write_due_date(self, image:ImageDraw, due_date: str) -> None:
+    def __write_due_date(self, image:ImageDraw, due_date) -> None:
         start_of_due_date_box = 580
         rectangle_background_postion = (
             start_of_due_date_box,
@@ -115,7 +115,7 @@ class Todos_List():
         image.rectangle(rectangle_background_postion, fill=0)
         image.text(rectangle_forground_postion, due_date, font=self.__fonts.tasks_due_date, fill=255)  # Print the due date of task
 
-    def __write_number_of_extra_todos(self, image:ImageDraw, number_of_extra_todos: int) -> None:
+    def __write_number_of_extra_todos(self, image:ImageDraw, number_of_extra_todos) -> None:
         unknown_constent = 550 # TODO: Find out what this is
         extra_todos_background_position = (
             unknown_constent,
@@ -124,7 +124,7 @@ class Todos_List():
             self.__starting_vertical_position_of_tasks + 18 + self.__line_location
             )
 
-        notshown_tasks: str = "... & {} more ...".format(number_of_extra_todos)
+        notshown_tasks= "... & {} more ...".format(number_of_extra_todos)
         w_notshown_tasks, h_notshown_tasks = self.__fonts.tasks_due_date.getsize(notshown_tasks)
         x_nowshown_tasks = unknown_constent + \
             ((self.__display.width - unknown_constent) / 2) - (w_notshown_tasks / 2) # TODO:???, figure out what this is
@@ -148,10 +148,10 @@ class Todos_List():
         for task in self.todo_response:
             # priority:str = str(task['priority'])
 
-            title:str = self.__get_todo_text(task)
-            _is_todo_past_due_date: bool = self.__is_todo_past_due_date(task)
+            title= self.__get_todo_text(task)
+            _is_todo_past_due_date = self.__is_todo_past_due_date(task)
 
-            temp_image : ImageDraw = self.__display.draw_red if _is_todo_past_due_date else self.__display.draw_black
+            temp_image  = self.__display.draw_red if _is_todo_past_due_date else self.__display.draw_black
 
             self.__write_task_str(temp_image, title)
             # self.__write_priority_circle(temp_image, priority)
@@ -164,7 +164,7 @@ class Todos_List():
                 year = meta_data["year"]
 
                 # NOTE: Due date format is here
-                _due_date: str = datetime.date(year, month, day).strftime('%b %e')
+                _due_date = datetime.date(year, month, day).strftime('%b %e')
                 self.__write_due_date(temp_image, _due_date)
 
             if (_is_todo_past_due_date):
@@ -174,8 +174,8 @@ class Todos_List():
 
             self.__line_location += 26
 
-            number_of_extra_todos: int = len(self.todo_response) - self.__max_number_todos_shown # the number of todos not able shown
-            is_greater_screen_height: bool = self.__starting_vertical_position_of_tasks + self.__line_location + 28 >= self.__screen_height
+            number_of_extra_todos = len(self.todo_response) - self.__max_number_todos_shown # the number of todos not able shown
+            is_greater_screen_height = self.__starting_vertical_position_of_tasks + self.__line_location + 28 >= self.__screen_height
 
             if (is_greater_screen_height and number_of_extra_todos> 0):
                 self.__write_number_of_extra_todos(self.__display.draw_red, number_of_extra_todos)

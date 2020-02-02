@@ -164,7 +164,7 @@ class EPD:
 
     def display_frame(self, frame_buffer_black, frame_buffer_red):
         self.send_command(DATA_START_TRANSMISSION_1)
-        for i in range(0, self.width / 8 * self.height):
+        for i in range(0, int(self.width / 8 * self.height)):
             temp1 = frame_buffer_black[i]
             temp2 = frame_buffer_red[i]
             j = 0

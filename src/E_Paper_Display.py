@@ -13,9 +13,9 @@ class E_Paper_Display (Display):
         _black_image = self.__epd.get_frame_buffer(self.image_black)
         _red_image = self.__epd.get_frame_buffer(self.image_red)
 
-        logging('E_PAPER_Display   : -= Updating ePaper... =-')
+        logging.info('E_PAPER_Display   : -= Updating ePaper... =-')
         self.__epd.display_frame(
             _black_image,
             _red_image
             )
-        logging('E_PAPER_Display     : -= ...Done =-')
+        logging.info('E_PAPER_Display     : -= ...Done =-')
