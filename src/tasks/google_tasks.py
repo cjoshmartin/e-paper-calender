@@ -4,6 +4,8 @@ from __future__ import print_function
 import pickle
 import os.path
 import json
+import hashlib
+import tempfile
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -51,6 +53,27 @@ def task_reducer(task:dict):
     return reduced_task
 
 
+class DiscoveryCache: # https://github.com/googleapis/google-api-python-client/issues/325
+    def filename(self, url):
+        return os.path.join(
+            tempfile.gettempdir(),
+            'google_api_discovery_' + hashlib.md5(url.encode()).hexdigest())
+
+    def get(self, url):
+        try:
+            with open(self.filename(url), 'rb') as f:
+                return f.read().decode()
+        except FileNotFoundError:
+            return None
+
+    def set(self, url, content):
+        with tempfile.NamedTemporaryFile(delete=False) as f:
+            f.write(content.encode())
+            f.flush()
+            os.fsync(f)
+        os.rename(f.name, self.filename(url))
+
+
 def get_tasks():
     """Shows basic usage of the Tasks API.
     Prints the title and ID of the first 10 task lists.
@@ -75,7 +98,7 @@ def get_tasks():
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
-    service = build('tasks', 'v1', credentials=creds)
+    service = build('tasks', 'v1', credentials=creds, cache=DiscoveryCache()) # https://github.com/googleapis/google-api-python-client/issues/325
 
     # Call the Tasks API
     tasks = service.tasks().list(tasklist='@default').execute()
