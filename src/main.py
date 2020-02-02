@@ -25,28 +25,25 @@ WEATHER_API = os.getenv('WEATHER_API')
 EPD_WIDTH = 640
 EPD_HEIGHT = 384
 
-Display = Display_Factory()
-
-
 class EPD: 
     def __init__(self):
+        self.Display = Display_Factory(EPD_WIDTH, EPD_HEIGHT)
         self.do_screen_update = 1
         self.todo_response = ''
         self.line_start = 48
         self.weather_reponse = None
         self.forecast_reponse = None
-        self.todo_wait = 100
+        self.todo_wait = 10
         self.refresh_time = 600
         self.start_time = time.time() + self.refresh_time
-        self.todos = Todos_List()
+        self.todos = Todos_List(self.Display)
 
     def refresh(self):
         pass
 
     def run(self):
         while True:
-
-            # self.refresh_Screen()
+            self.refresh_Screen()
             # if (do_screen_update == 1):
                 # do_screen_update = 0
                 # refresh_Screen()
@@ -55,11 +52,11 @@ class EPD:
                 # print('-= General Refresh =-')
                 # refresh_Screen()
                 # start_time = time.time() + refresh_time
-            Display.show()
-            print('Sleeping for {}ms...'.format(self.todo_wait))
+            print('Sleeping for {}s...'.format(self.todo_wait))
             time.sleep(self.todo_wait)
 
     def refresh_Screen(self):
+        self.Display.reset_screen()
         # update_moment = time.strftime("%I") + ':' + time.strftime("%M") + ' ' + time.strftime("%p")
         # TODO: Refresh Calender
 
@@ -68,10 +65,9 @@ class EPD:
         # TODO: Fix this weather code
 
         # TODO: Refresh todos
-        if(self.todos.get_todos()):
-            self.todos.refresh(Display.draw_black, Display.draw_red)
-        Display.show()
+        self.todos.refresh()
 
+        self.Display.show()
 
 if __name__ == '__main__':
     edp = EPD()

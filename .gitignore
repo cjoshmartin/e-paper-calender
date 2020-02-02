@@ -8,3 +8,5 @@ __pycache__/**/
 /**/token.pickle
 /**/*.png
 
+
+.idea/
