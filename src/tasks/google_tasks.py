@@ -80,11 +80,14 @@ def get_tasks():
     """
     outbound_tasks = []
     creds = None
+    current_path = os.path.dirname(os.path.abspath(__file__))
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
+    picked_token_path = current_path + '/token.pickle'
+    print(picked_token_path)
+    if os.path.exists(picked_token_path):
+        with open(picked_token_path, 'rb') as token:
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -92,10 +95,10 @@ def get_tasks():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                os.path.dirname(os.path.abspath(__file__)) + '/credentials.json', SCOPES)
+                current_path + '/credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
+        with open(picked_token_path, 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('tasks', 'v1', credentials=creds, cache=DiscoveryCache()) # https://github.com/googleapis/google-api-python-client/issues/325
