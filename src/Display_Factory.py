@@ -1,9 +1,10 @@
+import logging
 import os
 
 
 def Display_Factory(width: int, height: int):
     build_device = os.getenv('Build')
-    print("Build Device is the following: {}".format(build_device))
+    logging.info("Display Factory   :Build Device is the following: {}".format(build_device))
     _instance = None
 
     if build_device == "target":

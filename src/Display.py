@@ -1,9 +1,17 @@
-from PIL import Image,ImageDraw
+import time
+import logging
+
+from PIL import Image, ImageDraw
 from Fonts import Fonts
+
+
 class Display:
-    def __init__(self, width: int, height: int):
+    def __init__(self, width: int, height: int, type_of_display: str):
         self.width = width
         self.height = height
+
+        assert len(type_of_display) > 1
+        self.type_of_display = type_of_display
 
         self.image_black = None
         self.draw_black = None
@@ -31,6 +39,9 @@ class Display:
         self.draw_black.line((250,320,640,320), fill = 0) # Footer for additional items
         self.draw_red.rectangle((245,0, 640, 55), fill = 0) # Task area banner
         #self.draw_black.text((585,370),update_moment,font = font_update_moment, fill = 255) # The update moment in Pooch
+    def refresh(self):
+        logging.info("Display:  Refreshing on A {} Display".format(self.type_of_display))
+        self.show()
 
     def show(self):
-        pass
+        pass # Do not call this directly

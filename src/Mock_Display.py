@@ -4,11 +4,10 @@ from Display import Display
 
 class Mock_Display(Display):
     def __init__(self, width: int, height: int):
-       Display.__init__(self, width, height)
-       pass
+       _type = "Mock"
+       Display.__init__(self, width, height, _type)
 
     def show(self):
-        print('Display Mock Display...')
         _black_image = self.image_black.copy()
         _red_image = self.image_red.copy()
 

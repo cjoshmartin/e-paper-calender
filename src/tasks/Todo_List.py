@@ -1,5 +1,6 @@
 import datetime
 import time
+import logging
 import threading
 
 from PIL import ImageDraw
@@ -24,6 +25,9 @@ class Todos_List():
         self.__default_line_location = 20
         self.__line_location = self.__default_line_location
 
+        logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S")
+        logging.info("Todo List  : Setup correctly")
+
         get_todos_thread = threading.Thread(target=self.get_todos, args=(1,), daemon=True)
         get_todos_thread.start()
 
@@ -37,12 +41,11 @@ class Todos_List():
             print('-= Ping ToDo API =-')
             new_todo_response = get_tasks()
             if ((new_todo_response) != (self.todo_response)):
-                print('-= Task List Change Detected =-')
-                #do_screen_update = 1 #TODO: Screen update?
+                logging.info('-= Task List Change Detected =-')
                 self.todo_response = new_todo_response
 
-            print('`get_todo` thread is going to sleep for {}s💤'.format(seconds_to_sleep))
-            time.sleep(30)
+            logging.info('Todo List  :`get_todo` thread is going to sleep for {}s💤'.format(seconds_to_sleep))
+            time.sleep(seconds_to_sleep)
 
     def __should_shorten(self, text: str) -> bool:
         return len(text) > self.__text_max_length
@@ -138,6 +141,7 @@ class Todos_List():
                         font=self.__fonts.tasks_due_date, fill=255)  # Print identifier that there are tasks not shown
 
     def refresh(self) -> None:
+        logging.info("Todo List  :  Refreshing Todo section of display")
         self.__reset_line_location()
         self.__display.header_title('Tasks')
 
@@ -145,7 +149,7 @@ class Todos_List():
             # priority:str = str(task['priority'])
 
             title:str = self.__get_todo_text(task)
-            _is_todo_past_due_date:bool = self.__is_todo_past_due_date(task)
+            _is_todo_past_due_date: bool = self.__is_todo_past_due_date(task)
 
             temp_image : ImageDraw = self.__display.draw_red if _is_todo_past_due_date else self.__display.draw_black
 
