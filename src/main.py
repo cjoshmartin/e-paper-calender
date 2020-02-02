@@ -1,65 +1,49 @@
 #!/usr/bin/python3
 
-from PIL import Image,ImageDraw, ImageFont
-import calendar
 import time
-import requests
 import sys
-import json
-import datetime
 import os
+import logging
+
 from dotenv import load_dotenv
 
 from tasks.Todo_List import Todos_List
 from Display_Factory import Display_Factory
+from Calender import Calender
 
 
 env_path = os.path.dirname(os.path.abspath(__file__)) + '/.env'
 print("Loading env: " + env_path)
 load_dotenv(dotenv_path=env_path, verbose=True)
 
-# TODOIST_TOKEN = os.getenv('TODOIST_TOKEN')
 WEATHER_API = os.getenv('WEATHER_API')
 
-# print(TODOIST_TOKEN + "\n" + WEATHER_API)
 EPD_WIDTH = 640
 EPD_HEIGHT = 384
 
 class EPD: 
     def __init__(self):
-        self.Display = Display_Factory(EPD_WIDTH, EPD_HEIGHT)
+        self.display = Display_Factory(EPD_WIDTH, EPD_HEIGHT)
         self.do_screen_update = 1
         self.todo_response = ''
         self.line_start = 48
         self.weather_reponse = None
         self.forecast_reponse = None
-        self.todo_wait = 10
-        self.refresh_time = 600
-        self.start_time = time.time() + self.refresh_time
-        self.todos = Todos_List(self.Display)
-
-    def refresh(self):
-        pass
+        self.refresh_time = 10
+        self.todos = Todos_List(self.display)
+        self.calender = Calender(self.display)
 
     def run(self):
         while True:
-            self.refresh_Screen()
-            # if (do_screen_update == 1):
-                # do_screen_update = 0
-                # refresh_Screen()
-                # start_time = time.time() + refresh_time
-            # elif (time.time() - start_time) > 0:
-                # print('-= General Refresh =-')
-                # refresh_Screen()
-                # start_time = time.time() + refresh_time
-            print('Sleeping for {}s...'.format(self.todo_wait))
-            time.sleep(self.todo_wait)
+            self.refresh()
+            logging.info('EPD   :Sleeping for {}s...'.format(self.refresh_time))
+            time.sleep(self.refresh_time)
 
-    def refresh_Screen(self):
-        self.Display.reset_screen()
+    def refresh(self):
+        self.display.reset_screen()
         # update_moment = time.strftime("%I") + ':' + time.strftime("%M") + ' ' + time.strftime("%p")
         # TODO: Refresh Calender
-
+        self.calender.refresh()
         # Check weather and poppulate the weather variables
         # query_weather()
         # TODO: Fix this weather code
@@ -67,7 +51,7 @@ class EPD:
         # TODO: Refresh todos
         self.todos.refresh()
 
-        self.Display.show()
+        self.display.show()
 
 if __name__ == '__main__':
     edp = EPD()
