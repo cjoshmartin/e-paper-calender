@@ -12,7 +12,11 @@ class Display:
         self.width = width
         self.height = height
         # ----------------------------
-        self.has_internet = True
+        self.starting_vertical_position_of_tasks = 48
+        self.__default_line_location = 20
+        self.line_location = self.__default_line_location
+        # ----------------------------
+        self.has_internet = False
         check_internet_thread = threading.Thread(target=self.__is_connected_to_internet, daemon=True)
         check_internet_thread.start()
         # ----------------------------
@@ -33,8 +37,15 @@ class Display:
         # ----------------------------
         self.reset_screen()
 
-    def __is_connected_to_internet(self):
-        time_in_mins = 3
+
+    def reset_line_location(self) -> None:
+        self.line_location = self.__default_line_location
+
+    def increment_line_location(self) -> None:
+        self.line_location += 26
+
+    def __is_connected_to_internet(self) -> None:
+        time_in_mins = 1
         time_in_seconds = time_in_mins * 60
         while True:
             try:
@@ -60,25 +71,25 @@ class Display:
         unknown_constent = 550 # TODO: Find out what this is
         extra_todos_background_position = (
             unknown_constent,
-            self.__starting_vertical_position_of_tasks + 2 + self.__line_location,
-            self.__display.width,
-            self.__starting_vertical_position_of_tasks + 18 + self.__line_location
+            self.starting_vertical_position_of_tasks + 2 + self.line_location,
+            self.width,
+            self.starting_vertical_position_of_tasks + 18 + self.line_location
         )
 
-        w_notshown_tasks, h_notshown_tasks = self.__fonts.tasks_due_date.getsize(title)
+        w_notshown_tasks, h_notshown_tasks = self.fonts.tasks_due_date.getsize(title)
         x_nowshown_tasks = unknown_constent + \
-                           ((self.__display.width - unknown_constent) / 2) - (w_notshown_tasks / 2) # TODO:???, figure out what this is
+                           ((self.width - unknown_constent) / 2) - (w_notshown_tasks / 2) # TODO:???, figure out what this is
 
         extra_todos_forground_position = (
             x_nowshown_tasks,
-            self.__starting_vertical_position_of_tasks + 3.5 + self.__line_location
+            self.starting_vertical_position_of_tasks + 3.5 + self.line_location
         )
 
         # Print larger rectangle for more tasks
         self.draw_red.rectangle(extra_todos_background_position, fill=0)
         # The placement for extra tasks not shown
         self.draw_red.text(extra_todos_forground_position, title,
-                   font=self.__fonts.tasks_due_date, fill=255)  # Print identifier that there are tasks not shown
+                   font=self.fonts.tasks_due_date, fill=255)  # Print identifier that there are tasks not shown
 
     def reset_screen(self):
         images_size = (self.width, self.height)
@@ -100,7 +111,7 @@ class Display:
     def refresh(self):
         logging.info("Display:  Refreshing on A {} Display".format(self.type_of_display))
         if not self.has_internet:
-            self.context_bar_title("No Internet Connection...")
+            self.context_bar_title("No Internet")
 
         self.show()
 

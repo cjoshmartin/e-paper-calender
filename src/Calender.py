@@ -64,6 +64,9 @@ class Calender:
             time.sleep(time_in_seconds)
 
     def refresh(self):
+        if self.weekday_name == None:
+            return;
+
         logging.info("Calender  : Updating Calender on screen")
         # This section is to center the calendar text in the middle
         w_day_str, h_day_str = self.fonts.day_str.getsize(self.weekday_name)
