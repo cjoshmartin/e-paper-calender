@@ -24,28 +24,25 @@ EPD_HEIGHT = 384
 class EPD: 
     def __init__(self):
         self.display = Display_Factory(EPD_WIDTH, EPD_HEIGHT)
-        self.refresh_time = 60
         self.todos = Todos_List(self.display)
         self.calender = Calender(self.display)
 
     def run(self):
         while True:
             self.refresh()
-            logging.info('EPD   : Sleeping for {}s...'.format(self.refresh_time))
-            time.sleep(self.refresh_time)
 
     def refresh(self):
-        self.display.reset_screen()
-        # TODO: Refresh Calender
-        self.calender.refresh()
-        # Check weather and poppulate the weather variables
-        # query_weather()
-        # TODO: Fix this weather code
+        if self.display.should_update_display:
+            self.display.reset_screen()
+            # TODO: Refresh Calender
+            self.calender.refresh()
+            # Check weather and poppulate the weather variables
+            # query_weather()
+            # TODO: Fix this weather code
 
-        # TODO: Refresh todos
-        self.todos.refresh()
+            self.todos.refresh()
 
-        self.display.refresh()
+            self.display.refresh()
 
 if __name__ == '__main__':
     edp = EPD()

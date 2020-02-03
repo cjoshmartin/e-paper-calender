@@ -1,3 +1,4 @@
+import threading
 import time
 import logging
 import calendar
@@ -6,54 +7,69 @@ from Display import Display
 
 class Calender:
     def __init__(self, display: Display):
+        logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S")
         self.__display = display
 
         self.cal_width = 240
         # Calendar strings to be displayed
-        self.weekday_name = time.strftime("%A") # Monday, Tuesday, Wenesday
-        self.month_name = time.strftime("%B") # January, October, June
-        self.day_of_the_month = time.strftime("%d") #[01-31]
-        self.current_year = time.strftime("%Y") # 2019, 2020
-        self.month_cal = str(
-            calendar.month(
-                int(self.current_year),
-                int(time.strftime("%m"))
-                )
-            )
-        self.month_cal = self.month_cal.split("\n",1) # Splits cal out put into `January 2020` & the days of th month
-        self.calendar_month = self.month_cal[0] # January 2020
-        self.month_cal = self.month_cal[1] # Holds all the days of the Month
+        self.weekday_name = None
+        self.month_name = None
+        self.day_of_the_month = None
+        self.current_year = None
+        self.month_cal = None
+        self.calendar_month = None
+
+        cal_reset_thread = threading.Thread(target=self.__reset, daemon=True)
+        cal_reset_thread.start()
 
         self.fonts = self.__display.fonts
-        logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S")
         logging.info("Calender  : Calender Setup correctly")
 
-    def reset(self):
-        logging.info("Calender  : Resetting Calender")
-        self.weekday_name = time.strftime("%A") # Monday, Tuesday, Wenesday
-        self.month_name = time.strftime("%B") # January, October, June
-        self.day_of_the_month = time.strftime("%d") #[01-31]
-        self.current_year = time.strftime("%Y") # 2019, 2020
-        self.month_cal = str(
-            calendar.month(
-                int(self.current_year),
-                int(time.strftime("%m"))
-            )
-        )
-        self.month_cal = self.month_cal.split("\n",1) # Splits cal out put into `January 2020` & the days of th month
-        self.calendar_month = self.month_cal[0] # January 2020
-        self.month_cal = self.month_cal[1] # Holds all the days of the Month
+    def __reset(self):
+        time_in_mins = 30
+        time_in_seconds = time_in_mins * 60
+        while True:
+            logging.info("Calender  : updating Calender")
+            day_of_the_month = time.strftime("%d") #[01-31]
+            should_update_day = day_of_the_month != self.day_of_the_month
+            if should_update_day:
+                self.weekday_name = time.strftime("%A") # Monday, Tuesday, Wenesday
+                self.day_of_the_month = day_of_the_month
 
-        logging.info("Calender  : Resetting Calender when well!")
+            month_name = time.strftime("%B") # January, October, June
+            should_update_month = month_name != self.month_name
+            if should_update_month:
+                self.month_name = month_name
+
+            current_year = time.strftime("%Y") # 2019, 2020
+            should_update_year = current_year != self.current_year
+            if should_update_year:
+                self.current_year = current_year
+                self.month_cal = str(
+                    calendar.month(
+                        int(current_year),
+                        int(time.strftime("%m"))
+                    )
+                )
+                self.month_cal = self.month_cal.split("\n",1) # Splits cal out put into `January 2020` & the days of th month
+                self.calendar_month = self.month_cal[0] # January 2020
+                self.month_cal = self.month_cal[1] # Holds all the days of the Month
+
+
+            if should_update_day or should_update_month or should_update_year:
+                # TODO: Maybe an need a blocker for all these threads accessing this flag
+                self.__display.should_update_display = True
+            logging.info("Calender  : Update of Calender when well!")
+            logging.info("Calender  : Sleeping calender update thread for {}s".format(time_in_seconds))
+            time.sleep(time_in_seconds)
 
     def refresh(self):
-        self.reset()
         logging.info("Calender  : Updating Calender on screen")
         # This section is to center the calendar text in the middle
         w_day_str, h_day_str = self.fonts.day_str.getsize(self.weekday_name)
         x_day_str = (self.cal_width / 2) - (w_day_str / 2)
 
-        # The settings for the Calenday today number in the middle
+        # The settings for the Calendar today number in the middle
         w_day_num, h_day_num = self.fonts.day.getsize(self.day_of_the_month)
         x_day_num = (self.cal_width / 2) - (w_day_num / 2)
 

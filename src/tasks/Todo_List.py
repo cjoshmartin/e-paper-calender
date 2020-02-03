@@ -28,21 +28,24 @@ class Todos_List():
         logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S")
         logging.info("Todo List  : Setup correctly")
 
-        get_todos_thread = threading.Thread(target=self.get_todos, args=(1,), daemon=True)
+        get_todos_thread = threading.Thread(target=self.get_todos, daemon=True)
         get_todos_thread.start()
 
     def __reset_line_location(self) -> None:
         self.__line_location = self.__default_line_location
 
-    def get_todos(self, arg1) -> None:
+    def get_todos(self) -> None:
         mins_to_sleep = 3
         seconds_to_sleep = mins_to_sleep * 60
+
         while True:
-            print('-= Ping ToDo API =-')
-            new_todo_response = get_tasks()
-            if ((new_todo_response) != (self.todo_response)):
-                logging.info('Todo List     : Task List Change Detected ')
-                self.todo_response = new_todo_response
+            if self.__display.has_internet:
+                print('-= Ping ToDo API =-')
+                new_todo_response = get_tasks()
+                if ((new_todo_response) != (self.todo_response)):
+                    logging.info('Todo List     : Task List Change Detected ')
+                    self.__display.should_update_display  = True
+                    self.todo_response = new_todo_response
 
             logging.info('Todo List  :`get_todo` thread is going to sleep for {}s💤'.format(seconds_to_sleep))
             time.sleep(seconds_to_sleep)
@@ -115,31 +118,6 @@ class Todos_List():
         image.rectangle(rectangle_background_postion, fill=0)
         image.text(rectangle_forground_postion, due_date, font=self.__fonts.tasks_due_date, fill=255)  # Print the due date of task
 
-    def __write_number_of_extra_todos(self, image:ImageDraw, number_of_extra_todos) -> None:
-        unknown_constent = 550 # TODO: Find out what this is
-        extra_todos_background_position = (
-            unknown_constent,
-            self.__starting_vertical_position_of_tasks + 2 + self.__line_location,
-            self.__display.width,
-            self.__starting_vertical_position_of_tasks + 18 + self.__line_location
-            )
-
-        notshown_tasks= "... & {} more ...".format(number_of_extra_todos)
-        w_notshown_tasks, h_notshown_tasks = self.__fonts.tasks_due_date.getsize(notshown_tasks)
-        x_nowshown_tasks = unknown_constent + \
-            ((self.__display.width - unknown_constent) / 2) - (w_notshown_tasks / 2) # TODO:???, figure out what this is
-
-        extra_todos_forground_position = (
-            x_nowshown_tasks,
-            self.__starting_vertical_position_of_tasks + 3.5 + self.__line_location
-            )
-
-        # Print larger rectangle for more tasks
-        image.rectangle(extra_todos_background_position, fill=0)
-        # The placement for extra tasks not shown
-        image.text(extra_todos_forground_position, notshown_tasks,
-                        font=self.__fonts.tasks_due_date, fill=255)  # Print identifier that there are tasks not shown
-
     def refresh(self) -> None:
         logging.info("Todo List  :  Refreshing Todo section of display")
         self.__reset_line_location()
@@ -178,5 +156,5 @@ class Todos_List():
             is_greater_screen_height = self.__starting_vertical_position_of_tasks + self.__line_location + 28 >= self.__screen_height
 
             if (is_greater_screen_height and number_of_extra_todos> 0):
-                self.__write_number_of_extra_todos(self.__display.draw_red, number_of_extra_todos)
+                self.__display.context_bar_title("... & {} more ...".format(number_of_extra_todos))
                 break
