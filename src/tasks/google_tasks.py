@@ -1,6 +1,7 @@
 #!/usr/bin/python3 
 
 from __future__ import print_function
+from dateutil import parser
 import pickle
 import os.path
 import json
@@ -16,7 +17,7 @@ import datetime
 SCOPES = ['https://www.googleapis.com/auth/tasks.readonly']
 
 
-def task_reducer(task:dict):
+def task_reducer(task: dict):
     if len(task['title']) < 1:
         return None
 
@@ -34,20 +35,19 @@ def task_reducer(task:dict):
 
     if 'due' in task:
         # "2020-01-26T16:58:14.000Z"
-        # reduced_task['due'] = task['due']
-
-        _due_list = str(task['due']).split('-')
-        year = int(_due_list[0])
-        month = int(_due_list[1])
-        day = int(_due_list[2].split('T')[0])
-        _day_in_current_year = datetime.date(year, month, day).strftime('%j')  # [0,365]
-        due_date = int(_day_in_current_year) + (int(year) * 365)
+        date = parser.parse(task['due'])
+        time = date.strftime("%r")
+        _day_in_current_year = date.strftime('%j')  # [0,365]
+        due_date = int(_day_in_current_year) + (date.year * 365)
 
         reduced_task['due-meta'] = {
-                'year': year,
-                'month': month,
-                'day': day
+                'year': date.year,
+                'month': date.month,
+                'day': date.day,
                 }
+        if time != '12:00:00 AM':
+            reduced_task['due-meta']['time'] = time
+
         reduced_task['due'] = due_date
 
     return reduced_task
@@ -74,11 +74,15 @@ class DiscoveryCache: # https://github.com/googleapis/google-api-python-client/i
         os.rename(f.name, self.filename(url))
 
 
+def sort_by_due_date(task: dict):
+    return task['due']
+
 def get_tasks():
     """Shows basic usage of the Tasks API.
     Prints the title and ID of the first 10 task lists.
     """
     outbound_tasks = []
+    outbound_tasks_with_due_dates = []
     creds = None
     current_path = os.path.dirname(os.path.abspath(__file__))
     # The file token.pickle stores the user's access and refresh tokens, and is
@@ -109,7 +113,13 @@ def get_tasks():
     for task in tasks['items']:
         reduced = task_reducer(task)
         if reduced is not None:
-            outbound_tasks.append(reduced)
+            if 'due' in reduced:
+                outbound_tasks_with_due_dates.append(reduced)
+            else:
+                outbound_tasks.append(reduced)
+
+    outbound_tasks_with_due_dates.sort(key=sort_by_due_date)
+    outbound_tasks[:0] = outbound_tasks_with_due_dates
     
     return outbound_tasks
 

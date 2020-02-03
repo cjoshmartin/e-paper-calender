@@ -27,7 +27,7 @@ class Todos_List():
         get_todos_thread.start()
 
     def get_todos(self) -> None:
-        mins_to_sleep = 5
+        mins_to_sleep = 3
         seconds_to_sleep = mins_to_sleep * 60
 
         while True:
@@ -135,6 +135,9 @@ class Todos_List():
 
                 # NOTE: Due date format is here
                 _due_date = datetime.date(year, month, day).strftime('%b %e')
+                if 'time' in meta_data:
+                    _due_date = "{}, {}".format(meta_data['time'], _due_date)
+
                 self.__write_due_date(temp_image, _due_date)
 
             if _is_todo_past_due_date:
