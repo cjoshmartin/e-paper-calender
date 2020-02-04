@@ -34,7 +34,6 @@ class EPD:
     def refresh(self):
         if self.display.should_update_display:
             self.display.reset_screen()
-            # TODO: Refresh Calender
             self.calender.refresh()
             # Check weather and poppulate the weather variables
             # query_weather()
