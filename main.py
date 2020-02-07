@@ -7,10 +7,8 @@ import logging
 
 from dotenv import load_dotenv
 
-from tasks.Todo_List import Todos_List
-from Display_Factory import Display_Factory
-from Calender import Calender
-
+from plugins import get_plugins
+from src.display import Display_Factory
 
 env_path = os.path.dirname(os.path.abspath(__file__)) + '/.env'
 print("Loading env: " + env_path)
@@ -24,22 +22,23 @@ EPD_HEIGHT = 384
 class EPD: 
     def __init__(self):
         self.display = Display_Factory(EPD_WIDTH, EPD_HEIGHT)
-        self.todos = Todos_List(self.display)
-        self.calender = Calender(self.display)
+        self.plugins = get_plugins(self.display)
+
 
     def run(self):
         while True:
             self.refresh()
 
+    # Check weather and poppulate the weather variables
+    # query_weather()
+    # TODO: Fix this weather code
+
     def refresh(self):
         if self.display.should_update_display:
             self.display.reset_screen()
-            self.calender.refresh()
-            # Check weather and poppulate the weather variables
-            # query_weather()
-            # TODO: Fix this weather code
 
-            self.todos.refresh()
+            for plugin in self.plugins:
+                plugin.refresh()
 
             self.display.refresh()
 

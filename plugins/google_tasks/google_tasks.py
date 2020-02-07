@@ -1,4 +1,4 @@
-#!/usr/bin/python3 
+#!/usr/bin/python3
 
 from __future__ import print_function
 from dateutil import parser
@@ -22,10 +22,10 @@ def task_reducer(task: dict):
         return None
 
     reduced_task = {
-                'id': task['id'],
-                'updated': task['updated'],
-                'title': task['title'],
-            }
+        'id': task['id'],
+        'updated': task['updated'],
+        'title': task['title'],
+    }
 
     if 'parent' in task:
         reduced_task['parent'] = task['parent']
@@ -41,10 +41,10 @@ def task_reducer(task: dict):
         due_date = int(_day_in_current_year) + (date.year * 365)
 
         reduced_task['due-meta'] = {
-                'year': date.year,
-                'month': date.month,
-                'day': date.day,
-                }
+            'year': date.year,
+            'month': date.month,
+            'day': date.day,
+        }
         if time != '12:00:00 AM':
             reduced_task['due-meta']['time'] = time
 
@@ -53,7 +53,7 @@ def task_reducer(task: dict):
     return reduced_task
 
 
-class DiscoveryCache: # https://github.com/googleapis/google-api-python-client/issues/325
+class DiscoveryCache:  # https://github.com/googleapis/google-api-python-client/issues/325
     def filename(self, url):
         return os.path.join(
             tempfile.gettempdir(),
@@ -76,6 +76,7 @@ class DiscoveryCache: # https://github.com/googleapis/google-api-python-client/i
 
 def sort_by_due_date(task: dict):
     return task['due']
+
 
 def get_tasks():
     """Shows basic usage of the Tasks API.
@@ -105,7 +106,8 @@ def get_tasks():
         with open(picked_token_path, 'wb') as token:
             pickle.dump(creds, token)
 
-    service = build('tasks', 'v1', credentials=creds, cache=DiscoveryCache()) # https://github.com/googleapis/google-api-python-client/issues/325
+    service = build('tasks', 'v1', credentials=creds,
+                    cache=DiscoveryCache())  # https://github.com/googleapis/google-api-python-client/issues/325
 
     # Call the Tasks API
     tasks = service.tasks().list(tasklist='@default').execute()
@@ -120,16 +122,15 @@ def get_tasks():
 
     outbound_tasks_with_due_dates.sort(key=sort_by_due_date)
     outbound_tasks[:0] = outbound_tasks_with_due_dates
-    
+
     return outbound_tasks
 
 
 def main():
     tasks = get_tasks()
-    
+
     print(json.dumps(tasks, indent=4, separators=(',', ': ')))
 
 
 if __name__ == '__main__':
-
     main()

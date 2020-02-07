@@ -4,10 +4,9 @@ import logging
 import threading
 
 from PIL import ImageDraw
-from Display import Display
+from src.display.Display import Display
 
-from tasks.google_tasks import get_tasks
-
+from plugins.google_tasks.google_tasks import get_tasks
 
 class Todos_List():
     def __init__(self, display: Display):

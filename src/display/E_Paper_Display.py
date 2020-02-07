@@ -1,6 +1,6 @@
 import logging
-import epd7in5b
-from Display import Display
+from lib import epd7in5b
+from src.display.Display import Display
 
 class E_Paper_Display (Display):
     def __init__(self, width: int, height: int):

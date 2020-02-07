@@ -4,8 +4,7 @@ import logging
 import urllib
 
 from PIL import Image, ImageDraw
-from Fonts import Fonts
-
+from src.fonts import Fonts
 
 class Display:
     def __init__(self, width: int, height: int, type_of_display: str):

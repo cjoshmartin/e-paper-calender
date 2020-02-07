@@ -3,7 +3,7 @@ import time
 import logging
 import calendar
 calendar.setfirstweekday(0)  # Monday is the first day of the week
-from Display import Display
+from src.display.Display import Display
 
 class Calender:
     def __init__(self, display: Display):

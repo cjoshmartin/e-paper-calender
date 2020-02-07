@@ -1,10 +1,9 @@
 
-
-from Display import Display
+from src.display.Display import Display
 
 class Mock_Display(Display):
     def __init__(self, width: int, height: int):
-       _type = "Mock"
+       _type = __name__
        Display.__init__(self, width, height, _type)
 
     def show(self):
