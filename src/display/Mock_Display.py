@@ -2,8 +2,8 @@
 from src.display.Display import Display
 
 class Mock_Display(Display):
-    def __init__(self, width: int, height: int):
-       Display.__init__(self, width, height)
+    def __init__(self):
+       Display.__init__(self)
 
     def show(self):
         _black_image = self.image_black.copy()

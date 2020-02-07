@@ -16,12 +16,9 @@ load_dotenv(dotenv_path=env_path, verbose=True)
 
 WEATHER_API = os.getenv('WEATHER_API')
 
-EPD_WIDTH = 640
-EPD_HEIGHT = 384
-
-class EPD: 
+class EPD:
     def __init__(self):
-        self.display = Display_Factory(EPD_WIDTH, EPD_HEIGHT)
+        self.display = Display_Factory()
         self.plugins = get_plugins(self.display)
 
 

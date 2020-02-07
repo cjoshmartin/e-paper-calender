@@ -3,13 +3,16 @@ import time
 import logging
 import urllib
 
+from lib import EPD_WIDTH, EPD_HEIGHT
+
 from PIL import Image, ImageDraw
 from src.fonts import Fonts
 
+
 class Display:
-    def __init__(self, width: int, height: int):
-        self.width = width
-        self.height = height
+    def __init__(self):
+        self.width = EPD_WIDTH
+        self.height = EPD_HEIGHT
         # ----------------------------
         self.starting_vertical_position_of_tasks = 48
         self.__default_line_location = 20

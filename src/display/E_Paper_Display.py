@@ -3,8 +3,8 @@ from lib import epd7in5b
 from src.display.Display import Display
 
 class E_Paper_Display (Display):
-    def __init__(self, width: int, height: int):
-       Display.__init__(self, width, height)
+    def __init__(self):
+       Display.__init__(self)
        self.__epd = epd7in5b.EPD() 
        self.__epd.init()
 

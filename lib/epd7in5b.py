@@ -23,14 +23,11 @@
  # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  # THE SOFTWARE.
  #
-
+from lib import EPD_WIDTH, EPD_HEIGHT
 from lib import epdif
 from PIL import Image
 import RPi.GPIO as GPIO
 
-# Display resolution
-EPD_WIDTH       = 640
-EPD_HEIGHT      = 384
 
 # EPD7IN5 commands
 PANEL_SETTING                               = 0x00
