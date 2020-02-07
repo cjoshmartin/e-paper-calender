@@ -4,8 +4,7 @@ from src.display.Display import Display
 
 class E_Paper_Display (Display):
     def __init__(self, width: int, height: int):
-       _type = "E_Paper"
-       Display.__init__(self, width, height, _type)
+       Display.__init__(self, width, height)
        self.__epd = epd7in5b.EPD() 
        self.__epd.init()
 
@@ -13,9 +12,9 @@ class E_Paper_Display (Display):
         _black_image = self.__epd.get_frame_buffer(self.image_black)
         _red_image = self.__epd.get_frame_buffer(self.image_red)
 
-        logging.info('E_PAPER_Display   : -= Updating ePaper... =-')
+        logging.info('{}   : -= Updating ePaper... =-'.format(self.__name__))
         self.__epd.display_frame(
             _black_image,
             _red_image
             )
-        logging.info('E_PAPER_Display     : -= ...Done =-')
+        logging.info('{}     : -= ...Done =-'.format(self.__name__))

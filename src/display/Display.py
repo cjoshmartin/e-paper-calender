@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw
 from src.fonts import Fonts
 
 class Display:
-    def __init__(self, width: int, height: int, type_of_display: str):
+    def __init__(self, width: int, height: int):
         self.width = width
         self.height = height
         # ----------------------------
@@ -21,6 +21,7 @@ class Display:
         # ----------------------------
         self.should_update_display = True
         # ----------------------------
+        type_of_display = self.__class__.__name__ # gets child name
         assert len(type_of_display) > 1
         self.type_of_display = type_of_display
         # ----------------------------
