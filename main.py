@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 
-import time
 import sys
 import os
-import logging
 
 from dotenv import load_dotenv
 

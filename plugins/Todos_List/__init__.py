@@ -6,7 +6,7 @@ import threading
 from PIL import ImageDraw
 from src.display.Display import Display
 
-from plugins.google_tasks.google_tasks import get_tasks
+from .google_tasks import get_tasks
 
 class Todos_List():
     def __init__(self, display: Display):
